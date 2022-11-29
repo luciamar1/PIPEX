@@ -136,18 +136,19 @@ char    *ft_find_path(char **large, char *small)
         return (NULL);
 }
 
-int main(int argc, char **argv, char **envp)
-{
+// int main(int argc, char **argv, char **envp)
+// {
 
-    char **path;
+//     char **path;
 
-    char *s = ":/";
+//     char *s = ":/";
 
-    path = (ft_split(ft_find_path(envp,  "PATH"), s));
-    while (*path)
-    {
-        printf("%s\n", *path);
-        path++;
-    }
-    return (0);
-}
+//     path = (ft_split(ft_find_path(envp,  "PATH"), ":/"));
+//     *path += 5;
+//     while (*path)
+//     {
+//         printf("%s\n", *path);
+//         path++;
+//     }
+//     return (0);
+// }

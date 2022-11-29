@@ -1,64 +1,62 @@
-# include <sys/types.h>
-# include <unistd.h>
-# include <stdio.h>
-# include <stdlib.h>
-#include <sys/wait.h>
+#include "pipex.h"
 
-int main(int argc, char **argv)
+int main(int argc, char **argv, char **envp)
 {
     int ncomand;
-    pid_t pid;
+    pid_t pid; 
     int	fd[2];
-	int	pipe(fd);
+	pipe(fd);
+	char **path;
     int file;
-
+	pid = 1;
     ncomand = argc - 3;
+	//printf("pid ========= %d\n", pid);
     while(ncomand)
     {
         pid = fork();
-        if(pid == 0)
+		pipe(fd);
+        if(pid > 0)
             break;
         if(pid < 0)
             return(0);
         ncomand --;
     }
-    if (pid == 0)
-        printf("HOLA SOY EL PROCESO == %d\n", getpid());
-    if (pid > 0)
-    {
-        wait(NULL);
-        printf("ADIOS SOY EL PROCESO == %d\n", getpid());
-    }
-    if (ncomand = argc - 3;)
+
+    if (ncomand == argc - 3)
 	{
-		file = open(argv[0]);
-		if (!dup2(file, stdin))
-			return(NULL)
-		if (!dup2(fd[1], stdout))
-			return(NULL)
+		file = open(argv[0], O_RDONLY);
+		if (!dup2(file, 0))
+			return(0);
+		if (!dup2(fd[1], 1))
+			return(0);
 		close(fd[0]);
 	}
 
-	if (ncomand == 1)
+	else if (ncomand == 1)
 	{
-		file = open(argv[argc - 1]);
-		if (!dup2(file, stdout))
-			return(NULL)
-		if (!dup2(fd[0], stdin))
-			return(NULL);
+		file = open(argv[argc - 1], O_WRONLY);
+		if (!dup2(file, 1))
+			return(0);
+		if (!dup2(fd[0], 0))
+			return(0);
         close(fd[1]);
 	}
 
-	else
+	if(pid != 0 && ncomand != argc - 3 && ncomand != 1)
 	{
-		if (!dup2(fd[0], stdin))
-			return(NULL)
-		if (!dup2(fd[1], stdout))
-			return(NULL)
+		if (!dup2(fd[0], 0))
+			return(0);
+		if (!dup2(fd[1], 1))
+			return(0);
 	}
-	return(NULL);
-
-        
+	path = (ft_split(ft_find_path(envp,  "PATH"), ":/"));
+	*path += +5;
+	while (*path)
+    {
+        printf("%s\n", *path);
+        path++;
+    }
+	return(0);
 }
 
 //CREO QUE DA IGUAL EL ORDEN DE EJECUCION DE PROCESOS
