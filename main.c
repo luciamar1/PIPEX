@@ -6,11 +6,39 @@ int main(int argc, char **argv, char **envp)
     pid_t pid; 
     int	fd[2];
 	pipe(fd);
-	char **path;
+	char **paths;
     int file;
+	char *path;
+	int p;
+
 	pid = 1;
     ncomand = argc - 3;
+	paths = (ft_split(ft_find_pathsenvp,  "PATH"), ":/");
+	*paths += +5;
+
+	/// see if access 
+	///mirar las rutas de acceso que puedan execute
+
+	while (*paths)
+    {
+        if(!access(*paths, X_OK))
+		{
+			paths - p;
+			*paths = malloc(ft_strlen(path) * sizeof(char));
+			*paths = paths + p;
+			p = 0;
+		}
+		else
+		{
+			free(paths);
+			p ++;
+		}
+        paths++;
+    }
+	
+	///create childs
 	//printf("pid ========= %d\n", pid);
+
     while(ncomand)
     {
         pid = fork();
@@ -21,7 +49,9 @@ int main(int argc, char **argv, char **envp)
             return(0);
         ncomand --;
     }
+	//        ###stdin == 0    ·····     ###stdout == 1      
 
+	///formatear salidas     
     if (ncomand == argc - 3)
 	{
 		file = open(argv[0], O_RDONLY);
@@ -49,22 +79,17 @@ int main(int argc, char **argv, char **envp)
 		if (!dup2(fd[1], 1))
 			return(0);
 	}
-	path = (ft_split(ft_find_path(envp,  "PATH"), ":/"));
-	*path += +5;
-	while (*path)
-    {
-        printf("%s\n", *path);
-        path++;
-    }
+	/// hacer el execve
+	if (pid == 0)
+	{
+		execve(path[ncomand], )
+	}
 	return(0);
 }
 
-//CREO QUE DA IGUAL EL ORDEN DE EJECUCION DE PROCESOS
-//HE COMUNICADO LOS PROCESOS ENTRE SI Y COMO TANTO EL DE LECTURA COMO EL DE ESCRITURA ESTAN ABIERTOS SE VAN A IR ESPERANDO 
-//POR QUE HASTA Q EL DE ESCRITURA NO SE CIERRE EL DE LECTURA NO PUEDE LEER
-//LO QUE NO SE ES SI VAN  A SEGUIR EL ORDEN POR QUE MI IDEA ES Q TODOS COMPARTAN EL MISMO PIPEX =) =O
-
-
-///ME QUEDA AVERIGUAR COMO HACER EXECUTE PARA IR PROVANDO Y COMO ORGANIZAR LOS PROCESOS 
-///PARA QUE CADA UNO HAGA SU COMANDO (ncomand) CREO QUE LO PODRE HACER TAMBIEN PUEDO 
-///HACER FUNCION POR COMANDO NO SE JUJUUJUUUJUJ
+///SI LO HE ENTENDIDO BIEN TENGO QUE PONER EN  
+//EL SEGUNDO ARGUMENTO DE EXECVE EL ARGUMENTO DEL COMANDO 
+//(POR EJEMPLO) (-la)
+//tengo que crear una funcion que me coja los elementos
+// (puedo usar ncomand para que me ayude a no repetir comandos )
+//MUCHO CUIDADOOO QUE NCOMAND CUENTA DE ABAJO ARRIBA
