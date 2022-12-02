@@ -1,5 +1,5 @@
 NAME = pipex
-SRC = 
+SRC = ft_split.c main.c 
 CFLAGS = -Wall -Wextra -Werror
 RM = /bin/rm -rf
 OBJ = $(SRC:.c=.o)
