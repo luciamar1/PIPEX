@@ -8,6 +8,7 @@
 # include <stdlib.h>
 #include <sys/wait.h>
 #include <fcntl.h>
+#include <string.h>
 
 int     ft_strlen(const char *s);
 char	*ft_strjoin(char const *s1, char const *s2);
