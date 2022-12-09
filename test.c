@@ -6,9 +6,9 @@
 
 int main(int argc,char **argv,char **env)
 {
-    char *arguments[] = {"ls", "-la", "-l", NULL};
-    printf("%d\n", access("/usr/bin/", X_OK));
-    // execve("/bin/ls", arguments, env);
-    // printf("error");
+    char *arguments[] = {"ls", "-l", NULL};
+    // printf("%d\n", access("/usr/bin/", X_OK));
+    execve("/bin/ls", arguments, env);
+    printf("error");
     return(0);
 }

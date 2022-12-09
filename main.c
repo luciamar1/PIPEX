@@ -92,16 +92,16 @@ int main(int argc, char **argv, char **envp)
 		{
 			//printf("antes == %s\n", paths[i]);
 			paths[i] = ft_strjoin(paths[i], comando[0]);
-			printf("despues == %s\n", paths[i]);
-			printf("%d\n", access(paths[i], X_OK));
-			// if(access(paths[i], X_OK) != -1)
-			// {
-			// 	printf("its ok =)");
-			// 	break;
-			// }
+			// printf("despues == %s\n", paths[i]);
+			// printf("%d\n", access(paths[i], X_OK));
+			if(access(paths[i], X_OK) != -1)
+			{
+				printf("its ok =)\n");
+				break;
+			}
 			i ++;
 		}
-		comando ++;
+		printf("comando == %s path[i] == %s\n", *comando, paths[i]);
 		// printf("hola soy == %d mi path es == %s\n", i, paths[i]);
 		execve(paths[i], comando, envp);
 		// printf("señorita poch\n");

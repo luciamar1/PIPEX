@@ -17,15 +17,17 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	char	*s;
 	int		l;
 
+	// printf("s1 === %s\n", s1);
+	// printf("s2 === %s\n", s1);
 	if (!s1 || !s2)
 		return (NULL);
-	l = ft_strlen(s1) + ft_strlen(s2);
-	s = malloc(l * sizeof(char) + 2);
+	l = ft_strlen(s1) + ft_strlen(s2) + 1;
+	s = malloc(l * sizeof(char) + 1);
 	if (s == NULL)
-		return (NULL);
+		return (NULL);	
 	while (*s1)
 		*s++ = *s1++;
-	*s++ = 92;
+	*s++ = 47;
 	while (*s2)
 		*s++ = *s2++;
 	*s = 0;
