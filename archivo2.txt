@@ -1,0 +1,19 @@
+hola guapa 5
+hwoffheo    dffijeiorj3oi   4
+second line: 4
+total 1768
+-rw-r--r--  1 lucia-ma  2019     305 Dec  2 16:24 Makefile
+-rwxr-xr-x  1 lucia-ma  2019   17840 Dec  9 19:08 a.out
+-rw-r--r--  1 lucia-ma  2019      55 Dec  8 12:54 archivo1.txt
+-rw-r--r--  1 lucia-ma  2019     960 Dec  9 19:08 archivo2.txt
+-rw-r--r--  1 lucia-ma  2019       9 Dec  9 12:05 archivo2.txt”
+-rw-r--r--  1 lucia-ma  2019    2529 Dec  9 10:48 ft_split.c
+-rw-r--r--  1 lucia-ma  2019    3216 Dec  1 17:39 ft_split.o
+-rw-r--r--  1 lucia-ma  2019    2528 Dec  9 19:08 main.c
+-rw-r--r--  1 lucia-ma  2019    2096 Dec  1 18:00 main.o
+-rw-r--r--  1 lucia-ma  2019       9 Dec  9 13:12 outfile
+-rw-r--r--  1 lucia-ma  2019     705 Dec  8 12:36 pipex.h
+-rw-r--r--  1 lucia-ma  2019  829508 Dec  9 19:08 pipex.h.gch
+-rw-r--r--  1 lucia-ma  2019     459 Dec  9 15:19 t.c
+-rw-r--r--  1 lucia-ma  2019     302 Dec  9 10:53 test.c
+-rw-r--r--  1 lucia-ma  2019      25 Nov  7 19:19 test.txt

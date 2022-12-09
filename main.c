@@ -6,11 +6,10 @@ int main(int argc, char **argv, char **envp)
 {
     int ncomand;
     pid_t pid; 
-	int	fd[argc - 3][2];
+	int	fd[argc - 4][2];
 	char **paths;
     int file[2];
 	int i;
-	int p;
 	if( argc < 5)
 	{
 		write(1, "faltan argumentos", 18);
@@ -22,16 +21,15 @@ int main(int argc, char **argv, char **envp)
 
 	/////CREAR EL PATH
 	paths = (ft_split(ft_find_paths(envp,  "PATH"), ':'));
-	i = 0;
+	//leaks
 	*paths += +5;
-	p = 0;
 	//..............................
 
 	/////CREAR LOS HIJOS Y LOS PIPES
     while(ncomand <= argc - 3)
     {
-        pid = fork();
 		pipe(fd[i]);
+        pid = fork();
         if(pid == 0)
 		{
 			printf("%d\n", ncomand);
@@ -50,17 +48,22 @@ int main(int argc, char **argv, char **envp)
     if (ncomand == 1)
 	{
 		file[0] = open(argv[0], O_RDONLY);
+		if(file[0] < 0)
+			return(0);
 		if (dup2(file[0], STDIN_FILENO) < 0)
 			return(0);
 		if (dup2(fd[i][1], STDOUT_FILENO) < 0)
 			return(0);
 		dprintf(STDOUT_FILENO, "hfiuehwoffheo    dffijeiorj3oi   %d\n", fd[i][1]);
+		dprintf(fd[i][1], "second line: %d\n", fd[i][1]);
 		close(fd[i][0]);
 	}
 
 	else if (ncomand == argc - 3)
 	{
 		file[1] = open(argv[argc - 1], O_WRONLY);
+		if(file[1] < 0)
+			return(0);
 		if (dup2(file[1], STDOUT_FILENO) < 0)
 			return(0);
 		if (dup2(fd[i-1][0], STDIN_FILENO) < 0)
@@ -70,7 +73,7 @@ int main(int argc, char **argv, char **envp)
 		s = malloc(5 * 1);
 		printf("hola guapa %zd\n", read(STDIN_FILENO, s, 5));
 
-		write(2, s, 5);
+		//write(2, s, 5);
 	    close(fd[i][1]);
 		close(fd[i][0]);
 	}
