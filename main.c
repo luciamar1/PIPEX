@@ -2,6 +2,24 @@
 #include <fcntl.h>
 #include <fcntl.h>
 
+FILE	*heredoc(char *delimitador, int fd)
+{
+	FILE *file;
+	file = fopen ( "fichero.txt", "w+" );        
+	if (file==NULL) {fputs ("File error",stderr); exit (1);}
+	char *gnl;
+
+	while(1)
+	{
+		gnl = get_next_line(fd);
+		if (gnl == NULL | ft_strncmp(gnl, delimitador, ft_strlen(gnl)))
+			break;
+		while(gnl)
+			write(file, gnl++, 1);
+	}
+	return(file);
+}
+
 int main(int argc, char **argv, char **envp)
 {
     int ncomand;
