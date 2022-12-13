@@ -28,7 +28,7 @@ int main(int argc, char **argv, char **envp)
 	char **paths;
     int file[2];
 	int i;
-	if( argc < 5)
+	if( argc < 5 || (ft_strncmp("here_doc", argv[1], 9) == 0 && argc < 6))
 	{
 		write(1, "faltan argumentos", 18);
 		return(0);
@@ -79,12 +79,16 @@ int main(int argc, char **argv, char **envp)
 
 	else if (ncomand == argc - 3)
 	{
-		file[1] = open(argv[argc - 1], O_WRONLY);
+		file[1] = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC);
 		if(file[1] < 0)
 			return(0);
 		if (dup2(file[1], STDOUT_FILENO) < 0)
 			return(0);
 		if (dup2(fd[i-1][0], STDIN_FILENO) < 0)
+		...................................
+
+
+
 			return(0);
 		char *s;
 
