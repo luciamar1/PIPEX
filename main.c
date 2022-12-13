@@ -2,22 +2,17 @@
 #include <fcntl.h>
 #include <fcntl.h>
 
-FILE	*heredoc(char *delimitador, int fd)
+void	heredoc(int **fd, char *delimitador)
 {
-	FILE *file;
-	file = fopen ( "fichero.txt", "w+" );        
-	if (file==NULL) {fputs ("File error",stderr); exit (1);}
 	char *gnl;
-
+	pipe(*fd);
 	while(1)
 	{
-		gnl = get_next_line(fd);
-		if (gnl == NULL | ft_strncmp(gnl, delimitador, ft_strlen(gnl)))
+		gnl = get_next_line(STDIN_FILENO);
+		if (gnl == NULL || ft_strncmp(gnl, delimitador, ft_strlen(gnl)))
 			break;
-		while(gnl)
-			write(file, gnl++, 1);
-	}
-	return(file);
+		while(gnl || ft_strncmp(gnl, delimitador, ft_strlen(gnl)))
+			write(*fd[0], gnl++, 1);
 }
 
 int main(int argc, char **argv, char **envp)
@@ -38,7 +33,7 @@ int main(int argc, char **argv, char **envp)
     ncomand = 1;
 
 	/////CREAR EL PATH
-	paths = (ft_split(ft_find_paths(envp,  "PATH"), ':'));
+	paths = (ft_splitpip(ft_find_paths(envp,  "PATH"), ':'));
 	//leaks
 	*paths += +5;
 	//..............................
@@ -65,15 +60,18 @@ int main(int argc, char **argv, char **envp)
 	///FORMATEAR SALIDAS     
     if (ncomand == 1)
 	{
-		file[0] = open(argv[0], O_RDONLY);
+		if(ft_strncmp("here_doc", argv[1], 9) == 0)
+			heredoc(&file, argv[2]);
+		else
+			file[0] = open(argv[0], O_RDONLY);
 		if(file[0] < 0)
 			return(0);
 		if (dup2(file[0], STDIN_FILENO) < 0)
 			return(0);
 		if (dup2(fd[i][1], STDOUT_FILENO) < 0)
 			return(0);
-		dprintf(STDOUT_FILENO, "hfiuehwoffheo    dffijeiorj3oi   %d\n", fd[i][1]);
-		dprintf(fd[i][1], "second line: %d\n", fd[i][1]);
+		// dprintf(STDOUT_FILENO, "hfiuehwoffheo    dffijeiorj3oi   %d\n", fd[i][1]);
+		// dprintf(fd[i][1], "second line: %d\n", fd[i][1]);
 		close(fd[i][0]);
 	}
 
@@ -93,7 +91,7 @@ int main(int argc, char **argv, char **envp)
 		char *s;
 
 		s = malloc(5 * 1);
-		printf("hola guapa %zd\n", read(STDIN_FILENO, s, 5));
+		// printf("hola guapa %zd\n", read(STDIN_FILENO, s, 5));
 
 		//write(2, s, 5);
 	    close(fd[i][1]);
@@ -113,13 +111,13 @@ int main(int argc, char **argv, char **envp)
 	{
 		////PASAR LOS COMANDOS A ARRAY BIDIMENSIONAAL
 		char **comando;
-		comando = ft_split(argv[ncomand + 1], ' ');
+		comando = ft_splitpip(argv[ncomand + 1], ' ');
 		//................................
 
 		/////METER EN LOS PATHS EL LA PRIMERA PALABRA DEL COMANDO
 		while(paths[i])
 		{
-			paths[i] = ft_strjoin(paths[i], comando[0]);
+			paths[i] = ft_strjoinpip(paths[i], comando[0]);
 			if(access(paths[i], X_OK) != -1)
 				break;
 			i ++;

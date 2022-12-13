@@ -1,18 +1,11 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
+//# include "libft.h"
+# include "pipex.h"
 
-int     ft_strlen(const char *s)
-{
-        int     l;
-        
-        l = 0;
-        while(s[l])
-                l++;
-        return(l);
-}
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoinpip(char const *s1, char const *s2)
 {
 	char	*s;
 	int		l;
@@ -48,7 +41,7 @@ char	*mallocseg(char *m, char *s, char c)
 	return (m);
 }
 
-char	*pon(const char **s, char c, char *m)
+char	*pon(char **s, char c, char *m)
 {
 	int	n;
 
@@ -88,7 +81,7 @@ void	m_free(char **m, int i, int p)
 	free(m);
 }
 
-char	**ft_split(char const *s, char c)
+char	**ft_splitpip(char *s, char c)
 {
 	char	**m;
 	int		p;

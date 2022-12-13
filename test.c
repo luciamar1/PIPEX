@@ -15,7 +15,18 @@
 // }
 int main(void)
 {
-    char *m = "hoal";
-    while(*m)
-        write(1, m++, 1);
+   FILE *file;
+	file = fopen ( "fichero.txt", "w+" );        
+	if (file==NULL) {fputs ("File error",stderr); exit (1);}
+	char *gnl;
+
+	while(1)
+	{
+		gnl = get_next_line(fd);
+		if (gnl == NULL | ft_strncmp(gnl, delimitador, ft_strlen(gnl)))
+			break;
+		while(gnl)
+			write(file, gnl++, 1);
+	}
+	return(file);
 }
