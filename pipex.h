@@ -12,7 +12,7 @@
 #include <fcntl.h>
 #include <string.h>
 
-char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strjoinpip(char const *s1, char const *s2);
 char    *ft_find_paths(char **large, char *small);
 int     ft_strncmp(const char *s1, const char *s2, size_t n);
 char    **ft_splitpip(char *s, char  ch);

@@ -2,22 +2,25 @@
 #include <fcntl.h>
 #include <fcntl.h>
 
-void	heredoc(int **fd, char *delimitador)
+void	heredoc(int *fd, char *delimitador)
 {
 	char *gnl;
-	pipe(*fd);
+	printf("jujujajajajuju\n");
+	pipe(fd);
 	while(1)
 	{
 		gnl = get_next_line(STDIN_FILENO);
 		if (gnl == NULL || ft_strncmp(gnl, delimitador, ft_strlen(gnl)))
 			break;
 		while(gnl || ft_strncmp(gnl, delimitador, ft_strlen(gnl)))
-			write(*fd[0], gnl++, 1);
+			write(fd[0], gnl++, 1);
+	}
 }
 
 int main(int argc, char **argv, char **envp)
 {
     int ncomand;
+	printf("%s\n", argv[1]);
     pid_t pid; 
 	int	fd[argc - 4][2];
 	char **paths;
@@ -45,7 +48,7 @@ int main(int argc, char **argv, char **envp)
         pid = fork();
         if(pid == 0)
 		{
-			printf("%d\n", ncomand);
+			//printf("%d\n", ncomand);
             break;
 		}
         if(pid < 0)
@@ -61,7 +64,7 @@ int main(int argc, char **argv, char **envp)
     if (ncomand == 1)
 	{
 		if(ft_strncmp("here_doc", argv[1], 9) == 0)
-			heredoc(&file, argv[2]);
+			heredoc(&file[0], argv[2]);
 		else
 			file[0] = open(argv[0], O_RDONLY);
 		if(file[0] < 0)
@@ -83,7 +86,7 @@ int main(int argc, char **argv, char **envp)
 		if (dup2(file[1], STDOUT_FILENO) < 0)
 			return(0);
 		if (dup2(fd[i-1][0], STDIN_FILENO) < 0)
-		...................................
+		//...................................
 
 
 
