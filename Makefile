@@ -6,19 +6,19 @@ RM = /bin/rm -rf
 OBJ = $(SRC:.c=.o)
 $(NAME): $(OBJ) 
 	make -C ../libft
-	make -C ../get_next_line
-	gcc $(CFLAGS) ../libft/libft.a ../get_next_line/get_next_line.a $(OBJ) -o $(NAME)
+	make -C ../kakagnlpipex
+	gcc $(CFLAGS) ../libft/libft.a ../kakagnlpipex/get_next_line.a $(OBJ) -o $(NAME)
 
 
 all: $(NAME)
 clean: 
 	$(RM) $(OBJ)
 	make -C ../libft clean
-	make -C ../get_next_line clean
+	make -C ../kakagnlpipex clean
 fclean: clean 
 	$(RM) $(NAME)
 	make -C ../libft fclean
-	make -C ../get_next_line fclean
+	make -C ../kakagnlpipex fclean
 re: fclean all
 .PHONY: all clean fclean re	
 
