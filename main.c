@@ -1,39 +1,49 @@
 #include "pipex.h"
 #include <fcntl.h>
-#include <fcntl.h>
+#include <errno.h>
 
-void	heredoc(int *fd, char *delimitador)
+
+
+void	ft_heredoc(int *file, char *delimitador)
 {
 	char *gnl;
-	printf("jujujajajajuju\n");
-	pipe(fd);
+	
 	while(1)
 	{
 		gnl = get_next_line(STDIN_FILENO);
-		if (gnl == NULL || ft_strncmp(gnl, delimitador, ft_strlen(gnl)))
+		if (ft_strncmp(gnl, delimitador, ft_strlen(delimitador)) == 0)
+		{
+	//		free(gnl);
 			break;
-		while(gnl || ft_strncmp(gnl, delimitador, ft_strlen(gnl)))
-			write(fd[0], gnl++, 1);
-	}
+		}
+		dprintf(STDERR_FILENO, "%s\n", gnl);
+		while (*gnl)
+			write(*file, gnl++, 1);
+	}	
 }
 
 int main(int argc, char **argv, char **envp)
 {
     int ncomand;
-	printf("%s\n", argv[1]);
     pid_t pid; 
-	int	fd[argc - 4][2];
+	int	fd[argc - 3][2];
 	char **paths;
     int file[2];
 	int i;
-	if( argc < 5 || (ft_strncmp("here_doc", argv[1], 9) == 0 && argc < 6))
+	int heredoc;
+
+	//heredoc si == 0
+	heredoc = ft_strncmp("here_doc", argv[1], 9);
+	if( argc < 5 || (heredoc == 0 && argc < 6))
 	{
 		write(1, "faltan argumentos", 18);
 		return(0);
 	}
-	pid = 1;
+
 	i = 0;
     ncomand = 1;
+	if(heredoc == 0)
+		ncomand = 2;
 
 	/////CREAR EL PATH
 	paths = (ft_splitpip(ft_find_paths(envp,  "PATH"), ':'));
@@ -42,72 +52,88 @@ int main(int argc, char **argv, char **envp)
 	//..............................
 
 	/////CREAR LOS HIJOS Y LOS PIPES
+	int x = argc -3;
+	while(x--)
+	{
+		pipe(fd[i++]);
+	}
+	i = 0;
+
     while(ncomand <= argc - 3)
     {
-		pipe(fd[i]);
+
         pid = fork();
         if(pid == 0)
 		{
-			//printf("%d\n", ncomand);
+			dprintf(STDERR_FILENO, "puta %d\n", i);
             break;
 		}
         if(pid < 0)
-            return(0);
-        ncomand ++;
+			return(0);
+		ncomand ++;
 		i ++;
     }
 	//.........................
 	
 	///        ###stdin == 0    ·····     ###stdout == 1    
-	
-	///FORMATEAR SALIDAS     
-    if (ncomand == 1)
+	///FORMATEAR SALIDAS   
+
+//PRIMERO  
+    if (i == 0)
 	{
-		if(ft_strncmp("here_doc", argv[1], 9) == 0)
-			heredoc(&file[0], argv[2]);
+		if(heredoc == 0)
+		{
+			int hd[2];
+
+			pipe(hd);
+			ft_heredoc(&hd[1], argv[2]);
+			if (dup2(hd[0], STDIN_FILENO) < 0)
+				return(0);
+			close(hd[1]);	
+		}
 		else
-			file[0] = open(argv[0], O_RDONLY);
-		if(file[0] < 0)
-			return(0);
-		if (dup2(file[0], STDIN_FILENO) < 0)
-			return(0);
+		{
+			file[0] = open(argv[1], O_RDONLY);
+			if(file[0] < 0)
+				return(0);
+			if (dup2(file[0], STDIN_FILENO) < 0)
+				return(0);
+		}
 		if (dup2(fd[i][1], STDOUT_FILENO) < 0)
+		{
+			perror("mal");
 			return(0);
-		// dprintf(STDOUT_FILENO, "hfiuehwoffheo    dffijeiorj3oi   %d\n", fd[i][1]);
-		// dprintf(fd[i][1], "second line: %d\n", fd[i][1]);
-		close(fd[i][0]);
+		}
+		//close(fd[0][1]);
 	}
-
-	else if (ncomand == argc - 3)
+//MEDIO
+	if(pid == 0 && (i != argc - 4 && (heredoc != 0 && i != argc - 5)) && i != 0)
 	{
-		file[1] = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC);
-		if(file[1] < 0)
-			return(0);
-		if (dup2(file[1], STDOUT_FILENO) < 0)
-			return(0);
-		if (dup2(fd[i-1][0], STDIN_FILENO) < 0)
-		//...................................
-
-
-
-			return(0);
-		char *s;
-
-		s = malloc(5 * 1);
-		// printf("hola guapa %zd\n", read(STDIN_FILENO, s, 5));
-
-		//write(2, s, 5);
-	    close(fd[i][1]);
-		close(fd[i][0]);
-	}
-
-	if(pid != 0 && ncomand != argc - 3 && ncomand != 1)
-	{
+		dprintf(STDERR_FILENO, "de SEG == %d\n", i);
 		if (dup2(fd[i-1][0], STDIN_FILENO) < 0)
 			return(0);
 		if (dup2( fd[i][1], STDOUT_FILENO) < 0)
 			return(0);
+		close(fd[i][0]);
 	}
+
+//ULTIMO
+	if (pid == 0 && (i == argc - 4 || (heredoc == 0 && i == argc - 5)))
+	{
+		dprintf(STDERR_FILENO, "de ULTIMO == %d\n", i);
+		file[1] = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC);
+		if(file[1] < 0)
+		{
+			perror("error");
+			return(0);
+		}
+		if (dup2(file[1], STDOUT_FILENO) < 0)
+			return(0);
+		if (dup2(fd[i-1][0], STDIN_FILENO) < 0)
+			return(0);
+	}
+
+	
 
 	i = 0;
 	if(pid == 0)

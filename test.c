@@ -15,18 +15,27 @@
 // }
 int main(void)
 {
-   FILE *file;
-	file = fopen ( "fichero.txt", "w+" );        
-	if (file==NULL) {fputs ("File error",stderr); exit (1);}
-	char *gnl;
+//    FILE *file;
+// 	file = fopen ( "fichero.txt", "w+" );        
+// 	if (file==NULL) {fputs ("File error",stderr); exit (1);}
+// 	char *gnl;
 
-	while(1)
+// 	while(1)
+// 	{
+// 		gnl = get_next_line(fd);
+// 		if (gnl == NULL | ft_strncmp(gnl, delimitador, ft_strlen(gnl)))
+// 			break;
+// 		while(gnl)
+// 			write(file, gnl++, 1);
+// 	}
+// 	return(file);
+	int ncomand;
+
+	ncomand = 2;
+	int argc = 3;
+	while(ncomand <= argc)
 	{
-		gnl = get_next_line(fd);
-		if (gnl == NULL | ft_strncmp(gnl, delimitador, ft_strlen(gnl)))
-			break;
-		while(gnl)
-			write(file, gnl++, 1);
+		ncomand++;
+		printf("puta\n");
 	}
-	return(file);
 }
