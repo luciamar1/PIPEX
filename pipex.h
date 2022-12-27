@@ -1,8 +1,7 @@
 #ifndef PIPEX_H
 # define PIPEX_H
 
-# include "../libft/libft.h"
-# include "../kakagnlpipex/get_next_line.h"
+# include "libft/libft.h"
 # include <stdarg.h>
 # include <sys/types.h>
 # include <unistd.h>
@@ -11,6 +10,15 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <string.h>
+
+typedef struct ss_list
+{
+	int heredoc;
+    int ncomand;
+    int comand;
+    int pid;
+    char **paths;
+}	tt_list;
 
 char	*ft_strjoinpip(char const *s1, char const *s2);
 char    *ft_find_paths(char **large, char *small);

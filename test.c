@@ -39,3 +39,6 @@ int main(void)
 		printf("puta\n");
 	}
 }
+if(pid == 0 && (i != 0 && i != 2))
+
+if(pid == 0 && ((i != argc - 4 && (heredoc != 0 && i != argc - 5)) && i != 0))

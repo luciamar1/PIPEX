@@ -1,5 +1,5 @@
 NAME = pipex
-SRC = ft_split.c main.c pepo.c
+SRC = ft_split.c main.c
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 RM = /bin/rm -rf
