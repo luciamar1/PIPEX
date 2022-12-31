@@ -47,7 +47,7 @@
 // 	/////CREAR EL PATH
 // 	paths = (ft_splitpip(ft_find_paths(envp,  "PATH"), ':'));
 // 	//leaks
-// 	*paths += +5;
+
 // 	//..............................
 
 // 	/////CREAR LOS HIJOS Y LOS PIPES
@@ -77,7 +77,8 @@
 // 	///        ###stdin == 0    ·····     ###stdout == 1    
 // 	///FORMATEAR SALIDAS   
 
-// //PRIMERO  
+// //PRIMERO  /*
+/*
     if (i == 0)
 	{
 		if(heredoc == 0)
@@ -108,7 +109,7 @@
 		// 	close(fd[i][1]);
 		// 	i;
 		// }
-	}
+	}*/
 // //MEDIO
 // 	if(pid == 0 && (i != argc - 4 && (heredoc != 0) && i != 0))
 // 	{

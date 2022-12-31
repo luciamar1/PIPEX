@@ -1,9 +1,7 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
-//# include "libft.h"
 # include "pipex.h"
-
 
 char	*ft_strjoinpip(char const *s1, char const *s2)
 {
@@ -126,9 +124,7 @@ int     ft_strncmp(const char *s1, const char *s2, size_t n)
 char    *ft_find_paths(char **large, char *small)
 {
         size_t  lsmall;
-        size_t  i;
-
-        i = 0;
+        
         lsmall= ft_strlen(small);
         while (*large)
         {
@@ -147,7 +143,7 @@ char    *ft_find_paths(char **large, char *small)
 //     char *s = ":/";
 
 //     path = (ft_split(ft_find_paths(envp,  "PATH"), ':'));
-//     *path += 5;
+
 //     while (*path)
 //     {
 //         printf("%s\n", *path);

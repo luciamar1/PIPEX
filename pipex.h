@@ -14,6 +14,7 @@
 typedef struct ss_list
 {
 	int heredoc;
+    int **fd;
     int ncomand;
     int comand;
     int pid;

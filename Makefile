@@ -1,24 +1,67 @@
 NAME = pipex
-SRC = ft_split.c main.c pepo.c
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror
-RM = /bin/rm -rf
-OBJ = $(SRC:.c=.o)
-$(NAME): $(OBJ) 
-	make -C libft
-	gcc $(CFLAGS) libft/libft.a $(OBJ) -o $(NAME)
 
+SRCS = ft_split.c main.c pepo.c
+
+OBJS = $(SRCS:.c=.o)
+OBJSB = $(SRCS:.c=.ob)
+
+LIB = libft/libft.a
+
+CC = gcc
+CFLAGS = -Wall -Wextra #-Werror -I inc -I libft
+
+$(NAME): $(OBJS)
+	@make -C libft
+	@rm -rf $(OBJSB)
+	$(CC) $(CFLAGS) $(OBJS) $(LIB) -o $(NAME)
+	#@echo "🏂 pepex Done 🏂"
+
+%.o:%.c
+	$(CC) -D BONUS=0 $(CFLAGS) -c $< -o $@
+	
+%.ob:%.c
+	$(CC) -D BONUS=1 $(CFLAGS) -c $< -o $@
+	
+bonus: $(OBJSB)
+	@make -C libft
+	@rm -rf $(OBJS)
+	$(CC) $(CFLAGS) $(OBJSB) $(LIB) -o $(NAME)
 
 all: $(NAME)
-clean: 
-	$(RM) $(OBJ)
-	make -C libft clean
-fclean: clean 
-	$(RM) $(NAME)
-	make -C libft fclean
- 
+
+clean:
+	@make clean -C libft
+	@rm -rf $(OBJS)
+	@rm -rf $(OBJSB)
+
+fclean: clean
+	@make fclean -C libft
+	@rm -f $(NAME)
+
 re: fclean all
-.PHONY: all clean fclean re	
+
+.PHONY: all clean fclean re norma bonus
+#NAME = pipex
+#SRC = ft_split.c main.c pepo.c
+#CC = gcc
+#CFLAGS = -Wall -Wextra ##-Werror
+#RM = /bin/rm -rf
+#OBJ = $(SRC:.c=.o)
+#$(NAME): $(OBJ) 
+#	make -C libft
+#	gcc $(CFLAGS) libft/libft.a $(OBJ) -o $(NAME)
+
+
+#all: $(NAME)
+#clean: 
+#	$(RM) $(OBJ)
+#	make -C libft clean
+#fclean: clean 
+#	$(RM) $(NAME)
+#	make -C libft fclean
+ 
+#re: fclean all
+#.PHONY: all clean fclean re	
 
 # NAME = pipex
 # SRC = utils.c main.c executer.c list_operations.c
