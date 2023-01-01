@@ -36,9 +36,9 @@ void    *ft_malloc(int ncomand, int **fd)
     }
     return(fd);
 }
-int    first_child(int file, int comand, int heredoc, char **argv, int **fd)
+int    first_child(tt_list *pipex, int *file, char **argv)
 {
-    if(heredoc == 0)
+    if(pipex->heredoc == 0)
 	{
 		int fdheredoc[2];
 
@@ -52,71 +52,73 @@ int    first_child(int file, int comand, int heredoc, char **argv, int **fd)
 
     else
 		{
-			file = open(argv[1], O_RDONLY);
-			if(file < 0)
+			*file = open(argv[1], O_RDONLY);
+			if(*file < 0)
 				return(0);
-			if (dup2(file, STDIN_FILENO) < 0)
+			if (dup2(*file, STDIN_FILENO) < 0)
 				return(0);
 		}
-		if (dup2(fd[comand][1], STDOUT_FILENO) < 0)
+		if (dup2(pipex->fd[pipex->comand][1], STDOUT_FILENO) < 0)
 			return(0);
+        dprintf(STDERR_FILENO, "oosjdpsojdsopja\n");
         return(1);
 }
 
-int    middle_child(int command, int **fd)
+int    middle_child(tt_list *pipex)
 {
-    if (dup2(fd[command - 1][0], STDIN_FILENO) < 0)
+    if (dup2(pipex->fd[pipex->comand - 1][0], STDIN_FILENO) < 0)
  			return(0);
-	if (dup2( fd[command][1], STDOUT_FILENO) < 0)
+	if (dup2( pipex->fd[pipex->comand][1], STDOUT_FILENO) < 0)
 		return(0);
-	close(fd[command][0]);
-	close(fd[command][1]);
+	close(pipex->fd[pipex->comand][0]);
+	close(pipex->fd[pipex->comand][1]);
     return(1);
 }
 
-int    final_child(int file, int command, char **argv, int **fd, int argc)
+int    final_child(tt_list *pipex, int *file, char **argv, int argc)
 {
-    file = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
-    if(file < 0)
+    *file = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
+    if(*file < 0)
     	return(0);
-    if (dup2(file, STDOUT_FILENO) < 0)
+    if (dup2(*file, STDOUT_FILENO) < 0)
     	return(0);
-    if (dup2(fd[command - 1][0], STDIN_FILENO) < 0)
+    if (dup2(pipex->fd[(pipex->comand) - 1][0], STDIN_FILENO) < 0)
     	return(0);
-    close(fd[command][0]);
-    close(fd[command][1]);
+    close(pipex->fd[pipex->comand][0]);
+    close(pipex->fd[pipex->comand][1]);
     return(1);
 }
 
-void    ft_execute(char **argv, int comand, char **paths, char **envp)
+void    ft_execute(tt_list *pipex, char **argv, char **envp)
 {
     char **comando;
     int i;
 
     i = 0;
-	comando = ft_splitpip(argv[comand + 1], ' ');
-    while(paths[i])
+	comando = ft_splitpip(argv[pipex->comand + 1], ' ');
+    while(pipex->paths[i])
     {
-    	paths[i] = ft_strjoinpip(paths[i], comando[0]);
-    	if(access(paths[i], X_OK) != -1)
+    	pipex->paths[i]= ft_strjoinpip(pipex->paths[i], comando[0]);
+    	if(access(pipex->paths[i], X_OK) != -1)
     		break;
     	i ++;
     }
-    execve(paths[i], comando, envp);
+    execve(pipex->paths[i], comando, envp);
 }
 
-void ifpid(tt_list pipex, int argc, char **argv, char **envp)
+void ifpid(tt_list *pipex, int argc, char **argv, char **envp)
 {
-    int file[2];
 
-    if(pipex.comand == 0)
-        first_child(file[0], pipex.comand, pipex.heredoc, argv, pipex.fd);
-    if(pipex.pid == 0 && (pipex.comand != argc - 4 && (pipex.heredoc != 0) && pipex.comand != 0))
-        middle_child(pipex.comand, pipex.fd);
-    if (pipex.pid == 0 && (pipex.comand == argc - 4 || (pipex.heredoc == 0 && pipex.comand == argc - 5)))
-        final_child(file[1], pipex.comand, argv, pipex.fd, argc);
-    if (pipex.pid == 0)
-        ft_execute(argv, pipex.comand, pipex.paths, envp);
+   // dprintf(STDERR_FILENO, "ahola %d\n", (pipex->fd[1][0]));
+    int file[2];
+    if(pipex->comand == 0)
+        first_child(pipex, &file[0], argv);
+    if(pipex->pid == 0 && (pipex->comand != argc - 4 && (pipex->heredoc != 0) && pipex->comand != 0))
+        middle_child(pipex);
+    if (pipex->pid == 0 && (pipex->comand == argc - 4 || (pipex->heredoc == 0 && pipex->comand == argc - 5)))
+        final_child(pipex, &file[1], argv, argc);
+    if (pipex->pid == 0)
+        ft_execute(pipex, argv, envp);
 }
 
 void    creationchilds(tt_list *pipex, int argc, char **argv, char **envp)
@@ -126,27 +128,27 @@ void    creationchilds(tt_list *pipex, int argc, char **argv, char **envp)
    
    i = 0;
    x = pipex->ncomand;
-   while(x--)
-        pipe(pipex->fd[i++]);
+   while(x)
+   {
+        pipe(pipex->fd[i]);
+        printf("puta x = %d\n", x);
+        printf("puta i = %d\n", i);
+        x--;
+        i ++;
+   }
     x = 2;
     i = 0;
-    while(x--)
-        dprintf(STDERR_FILENO, "caracola en vinagre %d\n", (pipex->fd[i++][0]));
-    dprintf(STDERR_FILENO, "hola %d\n", x);
 
     while(pipex->comand < pipex->ncomand)
     {
     pipex->pid = fork();
         if(pipex->pid == 0)
-        {
-            dprintf(STDERR_FILENO, "%d\n", pipex->comand);
             break;
-        }
         if(pipex->pid < 0)
             exit(0);
         (pipex->comand)++;
     }
-    ifpid(*pipex, argc, argv, envp);
+    ifpid(pipex, argc, argv, envp);
 }
 
 int main(int argc, char **argv, char **envp)
@@ -161,19 +163,26 @@ int main(int argc, char **argv, char **envp)
     pipex.comand = 0;
     pipex.heredoc = ft_strncmp("here_doc", argv[1], 9);
     pipex.ncomand = argc - 3;
-    if((pipex.fd = malloc((argc - 3) * sizeof(int *))))  
-        return(NULL);
-
-    dprintf(STDERR_FILENO, "jnjnjjn%d\n", pipex.comand);
-    if(*(pipex.fd) = malloc(2*sizeof(int)))
-        return(NULL);
+    if((pipex.fd = malloc((argc - 3) * sizeof(int *))) == NULL)  
+        return(0);
+    //FALTA UN WHILE
+    if((*(pipex.fd) = malloc(2 * (sizeof(int)))) == NULL)
+        return(0);
+    printf("joptetitas\n");
+    pipex.fd[0][0] = 69;
+    pipex.fd[0][1] = 96;
+    pipex.fd[1][0] = 6;
+    pipex.fd[1][1] = 9;
+    printf("fd == %d\n%d\n%d\n%d\n",  pipex.fd[0][0],  pipex.fd[0][1],  pipex.fd[1][0],  pipex.fd[1][1]);
     pipex.paths = (ft_splitpip(ft_find_paths(envp,  "PATH"), ':'));
     *(pipex.paths) += 5;
     if (pipex.heredoc == 0)
         pipex.ncomand = argc - 4;
     if (argc < 5 || (pipex.heredoc == 0 && argc < 6))
 		return(0);
+    dprintf(STDERR_FILENO, "ola \n");
     creationchilds(&pipex, argc, argv, envp);
+    dprintf(STDERR_FILENO, "jnjnjjn%d\n", pipex.comand);
     while(pipex.ncomand --)
         wait(NULL);
     return(0);

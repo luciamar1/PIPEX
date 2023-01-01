@@ -30,29 +30,29 @@ extern int counter;
 // }
 #include <stdio.h>
 
-int Valor(int);
-int Referencia(int*);
+// int Valor(int);
+// int Referencia(int*);
 
-int main(void)
-{
-    int array[30];
-    array[4] = 33;
+// int main(void)
+// {
+//     int array[30];
+//     array[4] = 33;
     
-    printf("Posicion 5, Valor: %d\r\n", Valor(array[4]));
-    printf("Posicion 5, Valor: %d\r\n", array[4]);
-    printf("Posicion 5, Referencia %d\r\n", Referencia(&array[4]));
-    printf("Posicion 5, Referencia %d\r\n", array[4]);
+//     printf("Posicion 5, Valor: %d\r\n", Valor(array[4]));
+//     printf("Posicion 5, Valor: %d\r\n", array[4]);
+//     printf("Posicion 5, Referencia %d\r\n", Referencia(&array[4]));
+//     printf("Posicion 5, Referencia %d\r\n", array[4]);
     
-    return 0;
-}
+//     return 0;
+// }
 
-int Valor(int v)
-{
-  return v;
-}
+// int Valor(int v)
+// {
+//   return v;
+// }
 
 
-int Referencia(int *r)
-{
-  return (*r)++;
-}
+// int Referencia(int *r)
+// {
+//   return (*r)++;
+// }
