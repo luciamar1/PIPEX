@@ -30,7 +30,7 @@ void	ft_heredoc(int *file, char *delimitador)
 
 //format()
 // void    ifchild(int *comand)
-void    *ft_malloc(int ncomand, int **fd)
+/*void    *ft_malloc(int ncomand, int **fd)
 {
     int i;
 
@@ -45,7 +45,7 @@ void    *ft_malloc(int ncomand, int **fd)
             return(NULL);
     }
     return(fd);
-}
+}*/
 int    first_child(tt_list *pipex, int *file, char **argv)
 {
     if(pipex->heredoc == 0)
