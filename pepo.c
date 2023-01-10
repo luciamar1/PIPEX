@@ -61,17 +61,17 @@ int    first_child(tt_list *pipex, int *file, char **argv)
 	}
 
     else
-		{
-			*file = open(argv[1], O_RDONLY);
-			if(*file < 0)
-				return(0);
-			if (dup2(*file, STDIN_FILENO) < 0)
-				return(0);
-		}
-		if (dup2(pipex->fd[pipex->comand][1], STDOUT_FILENO) < 0)
+	{
+	    *file = open(argv[1], O_RDONLY);
+        if(*file < 0)
+            return(0);
+        if (dup2(*file, STDIN_FILENO) < 0)
+        	return(0);
+	}
+	if (dup2(pipex->fd[pipex->comand][1], STDOUT_FILENO) < 0)
 			return(0);
-        dprintf(STDERR_FILENO, "oosjdpsojdsopja\n");
-        return(1);
+    dprintf(STDERR_FILENO, "oosjdpsojdsopja\n");
+    return(1);
 }
 
 int    middle_child(tt_list *pipex)
@@ -144,7 +144,7 @@ void    creationchilds(tt_list *pipex, int argc, char **argv, char **envp)
    
    i = 0;
    x = pipex->ncomand;
-    if((pipex->fd = malloc((argc - 3) * sizeof(int *))) == NULL)  
+   if((pipex->fd = malloc(x * sizeof(int *))) == NULL)  
         return(0);
    while(x--)
    {
