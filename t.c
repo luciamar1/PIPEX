@@ -1,58 +1,42 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
+#include "pipex.h"
+#include "libft/libft.h"
 #include <fcntl.h>
+#include <errno.h>
 
-extern int counter;
+int ft_create_childs_fd(tt_list *pipex)
+{
+    int ncomand;
+    int counter;
 
-// int main(void) {
-//     int fd = open("archivo2.txt", O_WRONLY | O_APPEND);
+    ncomand = pipex->ncomand;
+    counter = 0;
+    pipex->fd = malloc(x * sizeof(int *));
+    while(x)
+    {
+        pipex->fd[counter] = malloc(2 * sizeof(int));
+        pipe(pipex->fd[counter]);
+        counter ++;
+    }
+    while (pipex->comand < pipex->comand)
+    {
+        pipex->pid = fork();
+        if (pipex->pid == 0)
+            break;
+        if (pipex->pid < 0)
+            return(0);
+        pipex->comand ++;
+    }
+}
 
-//     printf("archivo2.txt fd = %d\n", fd);
-//     dup2(fd, 121);
-   
-//  dprintf(121, "This string will be printed in archivo2.txt file\n");
-//     exit(EXIT_SUCCESS);
-// }
-// int [2]guatafac(void)
-// {
-// 	int fd[2];
-// 	pipe(fd);
-// 	return(fd);
-// }
+int main(int argc, char **argv, char **envp)
+{
+    tt_list pipex;
 
-// int main(void)
-// {
-// 	int file[2];
-// 	file = guatafac();
-// 	printf(file[0]);
-// 	printf(file[1]);
-// }
-#include <stdio.h>
-
-// int Valor(int);
-// int Referencia(int*);
-
-// int main(void)
-// {
-//     int array[30];
-//     array[4] = 33;
-    
-//     printf("Posicion 5, Valor: %d\r\n", Valor(array[4]));
-//     printf("Posicion 5, Valor: %d\r\n", array[4]);
-//     printf("Posicion 5, Referencia %d\r\n", Referencia(&array[4]));
-//     printf("Posicion 5, Referencia %d\r\n", array[4]);
-    
-//     return 0;
-// }
-
-// int Valor(int v)
-// {
-//   return v;
-// }
-
-
-// int Referencia(int *r)
-// {
-//   return (*r)++;
-// }
+    //heredoc si == 0
+    pipex.heredoc = ft_strncmp("here_doc", argv[1], 9);
+    pipex.heredoc = argc - 3; 
+    if (pipex.heredoc == 0)
+        pipex.ncomand = argc - 4;
+    pipex.paths = (ft_splitpip(ft_find_paths(envp,  "PATH"), ':'));
+    ft_create_childs_fd(&pipex);
+}
