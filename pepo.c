@@ -4,7 +4,7 @@
 #include <fcntl.h>
 #include <errno.h>
 
-void    ft_close_all(tt_list *pipex)
+/*void    ft_close_all(tt_list *pipex)
 {
     int counter;
     counter = pipex->ncomand;
@@ -30,7 +30,7 @@ void	ft_heredoc(int *file, char *delimitador)
 
 //format()
 // void    ifchild(int *comand)
-/*void    *ft_malloc(int ncomand, int **fd)
+void    *ft_malloc(int ncomand, int **fd)
 {
     int i;
 
@@ -45,7 +45,7 @@ void	ft_heredoc(int *file, char *delimitador)
             return(NULL);
     }
     return(fd);
-}*/
+}
 int    first_child(tt_list *pipex, int *file, char **argv)
 {
     if(pipex->heredoc == 0)
@@ -190,4 +190,4 @@ int main(int argc, char **argv, char **envp)
     while(pipex.ncomand --)
         wait(NULL);
     return(0);
-}
+}*/

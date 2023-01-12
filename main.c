@@ -4,7 +4,7 @@
 #include <errno.h>
 
 
-
+/*
 void	ft_heredoc(int *file, char *delimitador)
 {
 	char *gnl;
@@ -77,7 +77,7 @@ int main(int argc, char **argv, char **envp)
 	///        ###stdin == 0    ·····     ###stdout == 1    
 ///FORMATEAR SALIDAS   
 
-// //PRIMERO  /*
+// //PRIMERO  
 
     if (i == 0)
 	{
@@ -163,7 +163,7 @@ while(i < 0)
 	ncomand --;
 }
 return(0);
-}
+}*/
 
 // ///execve (path ,  argumentos del comando acabados en null, env)
 
