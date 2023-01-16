@@ -1,4 +1,4 @@
-#include "pipex.h"
+//	#include "pipex.h"
 #include "libft/libft.h"
 #include <fcntl.h>
 #include <errno.h>

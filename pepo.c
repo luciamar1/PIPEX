@@ -1,8 +1,8 @@
-#include "pipex.h"
-#include "libft/libft.h"
+// #include "pipex.h"
+// #include "libft/libft.h"
 
-#include <fcntl.h>
-#include <errno.h>
+// #include <fcntl.h>
+// #include <errno.h>
 
 /*void    ft_close_all(tt_list *pipex)
 {
