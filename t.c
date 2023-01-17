@@ -6,9 +6,47 @@
 ///formatear salidas
 
 ///PRIMERO
-int first_child(list *pipex,int file, char **argv);
+int first_child(tt_list *pipex, int *file, char **argv)
+{
+    if(pipex->heredoc == 0)
+    {
+        int hd[2];
+
+        pipe(hd);
+        ft_heredoc(&hd[1], argv[2]);
+        if (dup2(hd[0], STDIN_FILENO) < 0)
+        	return(0);
+        close(hd[1]);	
+        close(hd[0]);
+    }
+    else
+		{
+			file[0] = open(argv[1], O_RDONLY);
+			if(file[0] < 0)
+				return(0);
+			if (dup2(file[0], STDIN_FILENO) < 0)
+				return(0);
+		}
+    if (dup2(pipex->fd[pipex->comand][1], STDOUT_FILENO) < 0)
+			return(0);
+
+}
 
 ///MEDIO
+int middle_child(tt_list *pipex)
+{
+    if(pipex->pid == 0 && (i != argc - 4 && (pipex->heredoc != 0) && i != 0))
+    {
+        if (dup2(pipex->fd[pipex->comand-1][0], STDIN_FILENO) < 0)
+            return(0);
+        if (dup2( pipex->fd[pipex->comand][1], STDOUT_FILENO) < 0)
+            return(0);
+        close(pipex->fd[pipex->comand][0]);
+        close(pipex->fd[pipex->comand][1]);
+    }
+    return(0);
+}
+
 
 ///ULTIMO
 
