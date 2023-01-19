@@ -24,6 +24,8 @@ int	ft_execute(tt_list *pipex, char **argv, char **envp)
 
 	i = 0;
 	comando = ft_splitpip(argv[pipex->comand + 2], ' ');
+	if(pipex->heredoc == 0)
+		comando = ft_splitpip(argv[pipex->comand + 3], ' ');
 	while (pipex->paths[i])
 	{
 		pipex->paths[i] = ft_strjoinpip(pipex->paths[i], comando[0]);
@@ -151,7 +153,6 @@ int main(int argc, char **argv, char **envp)
 	tt_list	pipex;
 
 	pipex.heredoc = ft_strncmp("here_doc", argv[1], 9);
-	pipex.heredoc = argc - 3; 
 	pipex.comand = 0;
 	pipex.ncomand = argc - 3;
 	if (pipex.heredoc == 0)
