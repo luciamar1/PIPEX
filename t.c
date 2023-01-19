@@ -3,6 +3,21 @@
 #include <fcntl.h>
 #include <errno.h>
 
+///heredoc
+void	ft_heredoc(int *file, char *delimitador)
+{
+	char *gnl;
+	
+	while(1)
+	{
+		gnl = get_next_line(STDIN_FILENO);
+		if (ft_strncmp(gnl, delimitador, ft_strlen(delimitador)) == 0)
+			break;
+		while (*gnl)
+			write(*file, gnl++, 1);
+	}	
+}
+
 ///formatear salidas
 
 int ft_execute(tt_list *pipex, char **argv, char **envp)
@@ -12,7 +27,8 @@ int ft_execute(tt_list *pipex, char **argv, char **envp)
     int i;
 	
     i = 0;
-    comando = ft_splitpip(argv[comand + 1], ' ');
+    comando = ft_splitpip(argv[pipex->comand + 2], ' ');
+    dprintf(STDERR_FILENO, "execute == %s\n", comando[0]);
 	//................................
 
 	/////METER EN LOS PATHS EL LA PRIMERA PALABRA DEL COMANDO
@@ -20,11 +36,13 @@ int ft_execute(tt_list *pipex, char **argv, char **envp)
 	{
 		pipex->paths[i] = ft_strjoinpip(pipex->paths[i], comando[0]);
 		if(access(pipex->paths[i], X_OK) != -1)
+        {
 			break;
+        }
 		i ++;
 	}
-		
 	execve(pipex->paths[i], comando, envp);
+    return(0);
 }
 
 ///PRIMERO
@@ -38,27 +56,32 @@ int first_child(tt_list *pipex, int *file, char **argv)
         pipe(hd);
         ft_heredoc(&hd[1], argv[2]);
         if (dup2(hd[0], STDIN_FILENO) < 0)
+        {
         	return(0);
+        }
         close(hd[1]);	
         close(hd[0]);
     }
     else
 		{
-			file[0] = open(argv[1], O_RDONLY);
+			if((file[0] = open(argv[1], O_RDONLY)) < 0)
+                return(0);
 			if(file[0] < 0)
 				return(0);
 			if (dup2(file[0], STDIN_FILENO) < 0)
 				return(0);
 		}
-    if (dup2(pipex->fd[pipex->comand][1], STDOUT_FILENO) < 0)
+        if (dup2( pipex->fd[pipex->comand][1], STDOUT_FILENO) < 0)
 			return(0);
-
+        close(file[0]);
+        close(pipex->fd[pipex->comand][1]);
+    return(0);
 }
 
 ///MEDIO
-int middle_child(tt_list *pipex)
+int middle_child(tt_list *pipex, int argc)
 {
-    if(pipex->pid == 0 && (i != argc - 4 && (pipex->heredoc != 0) && i != 0))
+    if(pipex->pid == 0 && (pipex->comand != argc - 4 && (pipex->heredoc != 0) && pipex->comand != 0))
     {
         if (dup2(pipex->fd[pipex->comand-1][0], STDIN_FILENO) < 0)
             return(0);
@@ -72,21 +95,18 @@ int middle_child(tt_list *pipex)
 
 
 ///ULTIMO
-int final_child(tt_list *pipex, int *file, argv, argc)
-if (pipex->pid == 0 && (pipex->comand == argc - 4 || (pipex->heredoc == 0 && pipex->comand == argc - 5)))
+int final_child(tt_list *pipex, int *file, char **argv, int argc)
 {
-	file[1] = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
-	if(file[1] < 0)
-	{
-		perror("error");
-		return(0);
-	}
-	if (dup2(file[1], STDOUT_FILENO) < 0)
-		return(0);
-	if (dup2(fd[pipex->comand-1][0], STDIN_FILENO) < 0)
-		return(0);
-	close(fd[pipex->comand][0]);
-	close(fd[pipex->comand][1]);
+    if (pipex->pid == 0 && (pipex->comand == argc - 4 || (pipex->heredoc == 0 && pipex->comand == argc - 5)))
+    {
+        if((file[1] = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0666)) < 0)
+            return(0);
+        if (dup2(file[1], STDOUT_FILENO) < 0)
+            return(0);
+        if (dup2(pipex->fd[pipex->comand-1][0], STDIN_FILENO) < 0)
+            return(0);
+    }
+    return(0);
 }
 ///crear hijos
 void ft_place_comand(tt_list *pipex, int argc, char **argv, char **envp)
@@ -95,7 +115,7 @@ void ft_place_comand(tt_list *pipex, int argc, char **argv, char **envp)
     if(pipex->comand == 0)
         first_child(pipex, &file[0], argv);
     if(pipex->pid == 0 && (pipex->comand != argc - 4 && (pipex->heredoc != 0) && pipex->comand != 0))
-        middle_child(pipex);
+        middle_child(pipex, argc);
     if (pipex->pid == 0 && (pipex->comand == argc - 4 || (pipex->heredoc == 0 && pipex->comand == argc - 5)))
         final_child(pipex, &file[1], argv, argc);
     if (pipex->pid == 0)
@@ -150,11 +170,15 @@ int main(int argc, char **argv, char **envp)
     printf("PATH == %s\n", pipex.paths[0]);
     ft_create_childs_fd(&pipex);
     ft_place_comand(&pipex, argc, argv, envp);
-    printf("hola soy el hijo == %d\n", pipex.comand);
-    while(i < 0)
-    {
-        wait(NULL);
-        ncomand --;
-    }   
+    dprintf(STDERR_FILENO, "ESTAS TU MAL?? comand == %d ncomand == %d pid == %d\n", pipex.comand, pipex.ncomand, pipex.pid);
+    //int  = 2;
+    // while(i)
+    // {
+    //     dprintf(STDERR_FILENO, "SOY EL HIJO == %d CON EL MISMISIMO PIN DE == %d\n", pipex.ncomand, pipex.pid);
+    //     wait(NULL);
+    //     pipex.ncomand;
+    // }   
+    wait(NULL);
+    wait(NULL);
     return (0);
 }

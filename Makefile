@@ -14,7 +14,6 @@ $(NAME): $(OBJS)
 	@make -C libft
 	@rm -rf $(OBJSB)
 	$(CC) $(CFLAGS) $(OBJS) $(LIB) -o $(NAME)
-	#@echo "🏂 pepex Done 🏂"
 
 %.o:%.c
 	$(CC) -D BONUS=0 $(CFLAGS) -c $< -o $@
