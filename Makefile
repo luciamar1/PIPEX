@@ -8,7 +8,7 @@ OBJSB = $(SRCS:.c=.ob)
 LIB = libft/libft.a
 
 CC = gcc
-CFLAGS = -Wall -Wextra #-Werror -I inc -I libft
+CFLAGS = -Wall -Wextra -Werror 
 
 $(NAME): $(OBJS)
 	@make -C libft
