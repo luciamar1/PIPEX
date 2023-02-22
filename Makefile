@@ -1,6 +1,6 @@
 NAME = pipex
 
-SRCS = ft_splitpip.c main.c pepo.c t.c
+SRCS = utils.c main.c hijos_y_pipes.c
 
 OBJS = $(SRCS:.c=.o)
 OBJSB = $(SRCS:.c=.ob)
