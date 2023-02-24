@@ -1,6 +1,6 @@
 NAME = pipex
 
-SRCS = ft_splitpip.c main.c 
+SRCS = utils.c main.c essentials.c manage_childs.c
 
 OBJS = $(SRCS:.c=.o)
 OBJSB = $(SRCS:.c=.ob)
@@ -8,7 +8,7 @@ OBJSB = $(SRCS:.c=.ob)
 LIB = libft/libft.a
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g3  -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
 
 $(NAME): $(OBJS)
 	@make -C libft
