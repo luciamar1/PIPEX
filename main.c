@@ -6,7 +6,7 @@
 /*   By: lucia-ma <lucia-ma@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 15:00:43 by lucia-ma          #+#    #+#             */
-/*   Updated: 2023/02/24 15:00:43 by lucia-ma         ###   ########.fr       */
+/*   Updated: 2023/02/27 14:32:33 by lucia-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,11 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <stdio.h>
+
+void	leaks(void)
+{
+	system("leaks -q pipex");
+}
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -36,5 +41,8 @@ int	main(int argc, char **argv, char **envp)
 		ft_place_comand(&pipex, argc, argv, envp);
 	while (pipex.ncomand --)
 		wait(NULL);
+	ft_freeintmatrix(pipex.fd, pipex.ncomand);
+	ft_freecharmatrix(pipex.paths);
+	atexit(leaks);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: lucia-ma <lucia-ma@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 15:00:23 by lucia-ma          #+#    #+#             */
-/*   Updated: 2023/02/24 15:00:23 by lucia-ma         ###   ########.fr       */
+/*   Updated: 2023/02/27 13:49:47 by lucia-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char	*ft_find_paths(char **large, char *small)
 	while (*large)
 	{
 		if (!ft_strncmp(*large, small, lsmall))
-			return (*large);
+			return (*large + 5);
 	large++;
 	}
 	return (NULL);
