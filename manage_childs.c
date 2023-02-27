@@ -6,11 +6,11 @@
 /*   By: lucia-ma <lucia-ma@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 15:00:19 by lucia-ma          #+#    #+#             */
-/*   Updated: 2023/02/24 15:00:19 by lucia-ma         ###   ########.fr       */
+/*   Updated: 2023/02/27 11:15:14 by lucia-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+ #include "pipex.h"
 #include "libft/libft.h"
 #include <fcntl.h>
 #include <errno.h>
@@ -59,17 +59,16 @@ int	middle_child(t_tlist *pipex, int argc)
 
 int	final_child(t_tlist *pipex, int *file, char **argv, int argc)
 {
-	if (pipex->pid == 0 && (pipex->comand == argc - 4 \
-	|| (pipex->heredoc == 0 && pipex->comand == argc - 5)))
-	{
+	if (pipex->heredoc == 0 && pipex->comand == argc - 5)
+		file[1] = open(argv[argc - 1], O_WRONLY | O_APPEND, 0666);
+	if (pipex->pid == 0 && (pipex->comand == argc - 4))
 		file[1] = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
-		if (file[1] < 0)
-			return (0);
-		if (dup2(file[1], STDOUT_FILENO) < 0)
-			return (0);
-		if (dup2(pipex->fd[pipex->comand - 1][0], STDIN_FILENO) < 0)
-			return (0);
-	}
+	if (file[1] < 0)
+		return (0);
+	if (dup2(file[1], STDOUT_FILENO) < 0)
+		return (0);
+	if (dup2(pipex->fd[pipex->comand - 1][0], STDIN_FILENO) < 0)
+		return (0);
 	return (0);
 }
 
