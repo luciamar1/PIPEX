@@ -6,7 +6,7 @@
 /*   By: lucia-ma <lucia-ma@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 15:00:19 by lucia-ma          #+#    #+#             */
-/*   Updated: 2023/02/27 11:15:14 by lucia-ma         ###   ########.fr       */
+/*   Updated: 2023/02/27 19:08:08 by lucia-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,16 +44,12 @@ int	first_child(t_tlist *pipex, int *file, char **argv)
 	return (0);
 }
 
-int	middle_child(t_tlist *pipex, int argc)
+int	middle_child(t_tlist *pipex)
 {
-	if (pipex->pid == 0 && (pipex->comand != argc - 4 \
-	&& (pipex->heredoc != 0) && pipex->comand != 0))
-	{
-		if (dup2(pipex->fd[pipex->comand - 1][0], STDIN_FILENO) < 0)
-			return (0);
-		if (dup2 (pipex->fd[pipex->comand][1], STDOUT_FILENO) < 0)
-			return (0);
-	}
+	if (dup2(pipex->fd[pipex->comand - 1][0], STDIN_FILENO) < 0)
+		return (0);
+	if (dup2 (pipex->fd[pipex->comand][1], STDOUT_FILENO) < 0)
+		return (0);
 	return (0);
 }
 
@@ -75,12 +71,15 @@ int	final_child(t_tlist *pipex, int *file, char **argv, int argc)
 void	ft_place_comand(t_tlist *pipex, int argc, char **argv, char **envp)
 {
 	int	file[2];
-
+	
 	if (pipex->comand == 0)
 		first_child(pipex, file, argv);
-	if ((pipex->comand != argc - 4 && (pipex->heredoc != 0) \
-	&& pipex->comand != 0))
-		middle_child(pipex, argc);
+	else if ((pipex->comand != argc - 4 && pipex->heredoc != 0) || \
+	(pipex->comand != argc - 5 && pipex->heredoc == 0))
+	{
+		printf("me meto?\n");
+		middle_child(pipex);
+	}
 	if ((pipex->comand == argc - 4 || (pipex->heredoc == 0 \
 	&& pipex->comand == argc - 5)))
 		final_child(pipex, file, argv, argc);

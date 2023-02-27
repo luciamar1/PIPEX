@@ -6,7 +6,7 @@
 /*   By: lucia-ma <lucia-ma@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 15:00:16 by lucia-ma          #+#    #+#             */
-/*   Updated: 2023/02/24 15:00:16 by lucia-ma         ###   ########.fr       */
+/*   Updated: 2023/02/27 19:13:14 by lucia-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	ft_heredoc(int *file, char *delimitador)
 		while (*gnl)
 			write(*file, gnl++, 1);
 	}	
+	free (gnl);
 }
 
 int	ft_execute(t_tlist *pipex, char **argv, char **envp)
@@ -48,6 +49,7 @@ int	ft_execute(t_tlist *pipex, char **argv, char **envp)
 		}
 		i ++;
 	}
+	ft_freeintmatrix(pipex->fd, pipex->ncomand);
 	execve(pipex->paths[i], comando, envp);
 	return (0);
 }
