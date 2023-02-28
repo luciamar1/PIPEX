@@ -6,7 +6,7 @@
 /*   By: lucia-ma <lucia-ma@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 15:00:16 by lucia-ma          #+#    #+#             */
-/*   Updated: 2023/02/27 19:13:14 by lucia-ma         ###   ########.fr       */
+/*   Updated: 2023/02/28 19:28:25 by lucia-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,18 @@
 void	ft_heredoc(int *file, char *delimitador)
 {
 	char	*gnl;
+	int		i;
 
 	while (1)
 	{
+		i = 0;
 		gnl = get_next_line(STDIN_FILENO);
 		if (ft_strncmp(gnl, delimitador, ft_strlen(delimitador)) == 0)
 			break ;
-		while (*gnl)
-			write(*file, gnl++, 1);
+		while (gnl[i])
+			write(*file, &gnl[i++], 1);
+		free (gnl);
 	}	
-	free (gnl);
 }
 
 int	ft_execute(t_tlist *pipex, char **argv, char **envp)
@@ -37,20 +39,21 @@ int	ft_execute(t_tlist *pipex, char **argv, char **envp)
 	int		i;
 
 	i = 0;
-	comando = ft_split(argv[pipex->comand + 2], ' ');
 	if (pipex->heredoc == 0)
 		comando = ft_split(argv[pipex->comand + 3], ' ');
+	else
+		comando = ft_split(argv[pipex->comand + 2], ' ');
 	while (pipex->paths[i])
 	{
 		pipex->paths[i] = ft_strjoinpip(pipex->paths[i], comando[0]);
 		if (access(pipex->paths[i], X_OK) != -1)
-		{
 			break ;
-		}
 		i ++;
 	}
 	ft_freeintmatrix(pipex->fd, pipex->ncomand);
 	execve(pipex->paths[i], comando, envp);
+	ft_freecharmatrix(pipex->paths);
+	ft_freecharmatrix(comando);
 	return (0);
 }
 
@@ -63,12 +66,18 @@ int	ft_create_pipe(t_tlist *pipex)
 	counter = 0;
 	pipex->fd = malloc(ncomand * sizeof(int *));
 	if (pipex->fd == NULL)
+	{
+		ft_freecharmatrix(pipex->paths);
 		return (0);
+	}
 	while (ncomand)
 	{
 		pipex->fd[counter] = malloc(2 * sizeof(int));
 		if (pipex->fd[counter] == NULL)
+		{
+			ft_freecharmatrix(pipex->paths);
 			return (0);
+		}
 		pipe(pipex->fd[counter]);
 		ncomand --;
 		counter++;

@@ -6,7 +6,7 @@
 /*   By: lucia-ma <lucia-ma@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 15:00:43 by lucia-ma          #+#    #+#             */
-/*   Updated: 2023/02/27 19:12:48 by lucia-ma         ###   ########.fr       */
+/*   Updated: 2023/02/28 14:02:32 by lucia-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 #include <errno.h>
 #include <stdio.h>
 
-// void	leaks(void)
-// {
-// 	system("leaks -q pipex");
-// }
+void	leaks(void)
+{
+	system("leaks -q pipex");
+}
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -42,5 +42,6 @@ int	main(int argc, char **argv, char **envp)
 		wait(NULL);
 	ft_freecharmatrix(pipex.paths);
 	//leaks();
+	atexit(leaks);
 	return (0);
 }
