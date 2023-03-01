@@ -105,5 +105,6 @@ void	ft_place_comand(t_tlist *pipex, int argc, char **argv, char **envp)
 	if ((pipex->comand == argc - 4 || (pipex->heredoc == 0 \
 	&& pipex->comand == argc - 5)))
 		final_child(pipex, file, argv, argc);
+	dprintf(STDERR_FILENO, "wattaaaaaaafaaaaac =)\n");
 	ft_execute(pipex, argv, envp);
 }

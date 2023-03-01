@@ -46,6 +46,7 @@ int	ft_execute(t_tlist *pipex, char **argv, char **envp)
 	while (pipex->paths[i])
 	{
 		pipex->paths[i] = ft_strjoinpip(pipex->paths[i], comando[0]);
+		dprintf(STDERR_FILENO, "wattaaaaaaafaaaaac =) %s\n", pipex->paths[i]);
 		if (access(pipex->paths[i], X_OK) != -1)
 			break ;
 		i ++;

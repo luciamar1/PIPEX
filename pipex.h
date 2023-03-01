@@ -41,7 +41,7 @@ int		ft_create_pipe(t_tlist *pipex);
 int		ft_create_childs_fd(t_tlist *pipex);
 int		ft_execute(t_tlist *pipex, char **argv, char **envp);
 void	ft_heredoc(int *file, char *delimitador);
-char	*ft_strjoinpip(char const *s1, char const *s2);
+char	*ft_strjoinpip(char *s1, char *s2);
 char	*ft_find_paths(char **large, char *small);
 
 #endif

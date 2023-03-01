@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include "pipex.h"
 
-char	*ft_strjoinpip(char const *s1, char const *s2)
+char	*ft_strjoinpip(char *s1, char *s2)
 {
 	char	*s;
 	int		l;
@@ -39,7 +39,7 @@ char	*ft_strjoinpip(char const *s1, char const *s2)
 	s[counter] = 0;
 	free(s1);
 	free(s2);
-	return (s - l);
+	return (s);
 }
 
 char	*ft_find_paths(char **large, char *small)
