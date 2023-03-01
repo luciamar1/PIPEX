@@ -6,7 +6,7 @@
 /*   By: lucia-ma <lucia-ma@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 15:00:16 by lucia-ma          #+#    #+#             */
-/*   Updated: 2023/03/01 13:02:37 by lucia-ma         ###   ########.fr       */
+/*   Updated: 2023/03/01 19:53:50 by lucia-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,27 @@ void	ft_heredoc(int *file, char *delimitador)
 	}	
 }
 
+int	verify_access(t_tlist *pipex, char **comando, int *i)
+{
+	while (pipex->paths[*i])
+	{
+		pipex->paths[*i] = ft_strjoinpip(pipex->paths[*i], comando[0]);
+		if (pipex->paths[*i] == NULL)
+		{
+			ft_freecharmatrix(comando);
+			ft_freepathfdncomand(pipex, pipex->ncomand);
+			return (-1);
+		}
+		if (access(pipex->paths[*i], X_OK) != -1)
+		{
+			//dprintf(STDERR_FILENO, "pkdpskpdkspdksdpsdkpsdkdkpkpkpskspdskspdkspdkspdks\n");
+			return (1);
+		}
+		(*i) ++;
+	}
+	return (-1);
+}
+
 int	ft_execute(t_tlist *pipex, char **argv, char **envp)
 {
 	char	**comando;
@@ -45,26 +66,17 @@ int	ft_execute(t_tlist *pipex, char **argv, char **envp)
 		comando = ft_split(argv[pipex->comand + 2], ' ');
 	if (!comando)
 	{
-		ft_freecharmatrix(pipex->paths);
-		ft_freeintmatrix(pipex->fd, pipex->ncomand);
+		ft_freepathfdncomand(pipex, pipex->ncomand);
 		return (0);
 	}
-
-	while (pipex->paths[i])
+	if ( verify_access(pipex, comando, &i) == 1)
 	{
-		pipex->paths[i] = ft_strjoinpip(pipex->paths[i], comando[0]);
-		if (pipex->paths[i] == NULL)
-		{
-			ft_freecharmatrix(pipex->paths);
-			ft_freeintmatrix(pipex->fd, pipex->ncomand);
-			return (0);
-		}
-		if (access(pipex->paths[i], X_OK) != -1)
-			break ;
-		i ++;
+		ft_freeintmatrix(pipex->fd, pipex->ncomand);
+		execve(pipex->paths[i], comando, envp);
 	}
-	ft_freeintmatrix(pipex->fd, pipex->ncomand);
-	execve(pipex->paths[i], comando, envp);
+	else
+		ft_freeintmatrix(pipex->fd, pipex->ncomand);
+	exit(1);
 	return (0);
 }
 
@@ -84,13 +96,11 @@ int	ft_create_pipe(t_tlist *pipex)
 	while (ncomand)
 	{
 		pipex->fd[counter] = malloc(2 * sizeof(int));
-		if (pipex->fd[counter] == NULL)
+		if (pipex->fd[counter] == NULL || pipe(pipex->fd[counter]) < 0)
 		{
-			ft_freecharmatrix(pipex->paths);
-			ft_freeintmatrix(pipex->fd, counter);
+			ft_freepathfdncomand(pipex, counter + 1);
 			return (0);
 		}
-		pipe(pipex->fd[counter]);
 		ncomand --;
 		counter++;
 	}

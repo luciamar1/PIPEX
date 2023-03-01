@@ -6,7 +6,7 @@
 /*   By: lucia-ma <lucia-ma@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 15:00:23 by lucia-ma          #+#    #+#             */
-/*   Updated: 2023/02/27 13:49:47 by lucia-ma         ###   ########.fr       */
+/*   Updated: 2023/03/01 17:55:14 by lucia-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "pipex.h"
+
+void	ft_freepathfdncomand(t_tlist *pipex, int counter)
+{
+	ft_freecharmatrix(pipex->paths);
+	ft_freeintmatrix(pipex->fd, counter);
+}
 
 char	*ft_strjoinpip(char const *s1, char const *s2)
 {

@@ -6,7 +6,7 @@
 /*   By: lucia-ma <lucia-ma@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 15:00:50 by lucia-ma          #+#    #+#             */
-/*   Updated: 2023/02/27 18:38:09 by lucia-ma         ###   ########.fr       */
+/*   Updated: 2023/03/01 17:08:12 by lucia-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef struct ss_list
 	char	**paths;
 }	t_tlist;
 
+void	ft_freepathfdncomand(t_tlist *pipex, int counter);
 void	ft_place_comand(t_tlist *pipex, int argc, char **argv, char **envp);
 int		final_child(t_tlist *pipex, int *file, char **argv, int argc);
 int		first_child(t_tlist *pipex, int *file, char **argv);
