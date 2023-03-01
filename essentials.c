@@ -6,7 +6,7 @@
 /*   By: lucia-ma <lucia-ma@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 15:00:16 by lucia-ma          #+#    #+#             */
-/*   Updated: 2023/03/01 19:53:50 by lucia-ma         ###   ########.fr       */
+/*   Updated: 2023/03/01 19:58:27 by lucia-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,8 @@ int	verify_access(t_tlist *pipex, char **comando, int *i)
 			return (-1);
 		}
 		if (access(pipex->paths[*i], X_OK) != -1)
-		{
-			//dprintf(STDERR_FILENO, "pkdpskpdkspdksdpsdkpsdkdkpkpkpskspdskspdkspdkspdks\n");
 			return (1);
-		}
-		(*i) ++;
+		(*i)++;
 	}
 	return (-1);
 }
@@ -69,7 +66,7 @@ int	ft_execute(t_tlist *pipex, char **argv, char **envp)
 		ft_freepathfdncomand(pipex, pipex->ncomand);
 		return (0);
 	}
-	if ( verify_access(pipex, comando, &i) == 1)
+	if (verify_access(pipex, comando, &i) == 1)
 	{
 		ft_freeintmatrix(pipex->fd, pipex->ncomand);
 		execve(pipex->paths[i], comando, envp);

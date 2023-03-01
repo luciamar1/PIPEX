@@ -6,50 +6,47 @@
 /*   By: lucia-ma <lucia-ma@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 15:00:19 by lucia-ma          #+#    #+#             */
-/*   Updated: 2023/03/01 19:16:37 by lucia-ma         ###   ########.fr       */
+/*   Updated: 2023/03/01 20:04:59 by lucia-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
- #include "pipex.h"
+#include "pipex.h"
 #include "libft/libft.h"
 #include <fcntl.h>
 #include <errno.h>
 #include <stdio.h>
 
-int	first_child(t_tlist *pipex, int *file, char **argv)
+int	ft_manage_heredoc(t_tlist *pipex, char **argv)
 {
 	int	hd[2];
 
+	if (pipe(hd) < 0)
+	{
+		ft_freepathfdncomand(pipex, pipex->ncomand);
+		return (0);
+	}
+	ft_heredoc(&hd[1], argv[2]);
+	if (dup2(hd[0], STDIN_FILENO) < 0)
+	{
+		ft_freepathfdncomand(pipex, pipex->ncomand);
+		return (0);
+	}
+	close(hd[1]);
+	close(hd[0]);
+	return (1);
+}
+
+int	first_child(t_tlist *pipex, int *file, char **argv)
+{
 	if (pipex->heredoc == 0)
 	{
-		if (pipe(hd))
-		{
-			ft_freepathfdncomand(pipex, pipex->ncomand);
+		if (ft_manage_heredoc(pipex, argv) == 0)
 			return (0);
-		}
-		ft_heredoc(&hd[1], argv[2]);
-		if (dup2(hd[0], STDIN_FILENO) < 0)
-		{
-			ft_freepathfdncomand(pipex, pipex->ncomand);
-			return (0);
-		}
-		close(hd[1]);
-		close(hd[0]);
 	}
 	else
 	{
 		file[0] = open(argv[1], O_RDONLY);
-		if (file[0] < 0)
-		{
-			ft_freepathfdncomand(pipex, pipex->ncomand);
-			return (0);
-		}	
-		if (file[0] < 0)
-		{
-			ft_freepathfdncomand(pipex, pipex->ncomand);
-			return (0);
-		}	
-		if (dup2(file[0], STDIN_FILENO) < 0)
+		if (file[0] < 0 || dup2(file[0], STDIN_FILENO) < 0)
 		{
 			ft_freepathfdncomand(pipex, pipex->ncomand);
 			return (0);
