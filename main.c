@@ -6,7 +6,7 @@
 /*   By: lucia-ma <lucia-ma@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 15:00:43 by lucia-ma          #+#    #+#             */
-/*   Updated: 2023/02/28 14:02:32 by lucia-ma         ###   ########.fr       */
+/*   Updated: 2023/03/01 12:28:05 by lucia-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ int	main(int argc, char **argv, char **envp)
 	while (pipex.ncomand --)
 		wait(NULL);
 	ft_freecharmatrix(pipex.paths);
-	//leaks();
 	atexit(leaks);
 	return (0);
 }

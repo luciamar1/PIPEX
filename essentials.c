@@ -6,7 +6,7 @@
 /*   By: lucia-ma <lucia-ma@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 15:00:16 by lucia-ma          #+#    #+#             */
-/*   Updated: 2023/02/28 19:28:25 by lucia-ma         ###   ########.fr       */
+/*   Updated: 2023/03/01 13:02:37 by lucia-ma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,16 @@
 void	ft_heredoc(int *file, char *delimitador)
 {
 	char	*gnl;
-	int		i;
+	int		counter;
 
+	counter = 0;
 	while (1)
 	{
-		i = 0;
 		gnl = get_next_line(STDIN_FILENO);
 		if (ft_strncmp(gnl, delimitador, ft_strlen(delimitador)) == 0)
 			break ;
-		while (gnl[i])
-			write(*file, &gnl[i++], 1);
+		while (gnl[counter])
+			write(*file, &gnl[counter++], 1);
 		free (gnl);
 	}	
 }
@@ -43,18 +43,28 @@ int	ft_execute(t_tlist *pipex, char **argv, char **envp)
 		comando = ft_split(argv[pipex->comand + 3], ' ');
 	else
 		comando = ft_split(argv[pipex->comand + 2], ' ');
+	if (!comando)
+	{
+		ft_freecharmatrix(pipex->paths);
+		ft_freeintmatrix(pipex->fd, pipex->ncomand);
+		return (0);
+	}
+
 	while (pipex->paths[i])
 	{
 		pipex->paths[i] = ft_strjoinpip(pipex->paths[i], comando[0]);
-		dprintf(STDERR_FILENO, "wattaaaaaaafaaaaac =) %s\n", pipex->paths[i]);
+		if (pipex->paths[i] == NULL)
+		{
+			ft_freecharmatrix(pipex->paths);
+			ft_freeintmatrix(pipex->fd, pipex->ncomand);
+			return (0);
+		}
 		if (access(pipex->paths[i], X_OK) != -1)
 			break ;
 		i ++;
 	}
 	ft_freeintmatrix(pipex->fd, pipex->ncomand);
 	execve(pipex->paths[i], comando, envp);
-	ft_freecharmatrix(pipex->paths);
-	ft_freecharmatrix(comando);
 	return (0);
 }
 
@@ -77,6 +87,7 @@ int	ft_create_pipe(t_tlist *pipex)
 		if (pipex->fd[counter] == NULL)
 		{
 			ft_freecharmatrix(pipex->paths);
+			ft_freeintmatrix(pipex->fd, counter);
 			return (0);
 		}
 		pipe(pipex->fd[counter]);
@@ -97,7 +108,10 @@ int	ft_create_childs_fd(t_tlist *pipex)
 		if (pipex->pid == 0)
 			break ;
 		if (pipex->pid < 0)
+		{
+			ft_freecharmatrix(pipex->paths);
 			return (0);
+		}
 		pipex->comand ++;
 	}
 	return (1);
